@@ -40,7 +40,6 @@ class SignupActivity : AppCompatActivity() {
             }else {
                 Toast.makeText(this, "비밀번호가 일지하지 않습니다👾", Toast.LENGTH_SHORT).show()
             }
-
         }
 
         binding.button2.setOnClickListener{
@@ -48,11 +47,11 @@ class SignupActivity : AppCompatActivity() {
         }
     }
     private fun writeData() {
-        val firstName = binding.firstName.toString()
-        val lastName = binding.lastName.toString()
-        val email = binding.email.toString()
-        val pwd = binding.email.toString()
-        val pwdCheck = binding.pwdCheck.toString()
+        val firstName = binding.firstName.text.toString()
+        val lastName = binding.lastName.text.toString()
+        val email = binding.email.text.toString()
+        val pwd = binding.email.text.toString()
+        val pwdCheck = binding.pwdCheck.text.toString()
 
         if (firstName.isNotEmpty() && lastName.isNotEmpty() && email.isNotEmpty() && pwd.isNotEmpty() && pwdCheck.isNotEmpty()) {
             val user = User(null, firstName, lastName, email, pwd)
@@ -65,7 +64,7 @@ class SignupActivity : AppCompatActivity() {
             binding.pwd.text.clear()
             binding.pwdCheck.text.clear()
 
-            Toast.makeText(this@SignupActivity, "welcome" + firstName, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@SignupActivity, "welcome " + firstName, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -91,9 +90,8 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun checkPwd(): Boolean {
-        val pwd = binding.pwd.toString()
-        val pwdCheck = binding.pwdCheck.toString()
-        Toast.makeText(this, "pwd : " + pwd + "pwdCheck : "+pwdCheck, Toast.LENGTH_SHORT).show()
+        val pwd = binding.pwd.text.toString()
+        val pwdCheck = binding.pwdCheck.text.toString()
         if (pwd.equals(pwdCheck)) {
             return true
         }
@@ -101,11 +99,11 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun isAlreadyJoined(): Boolean {
-        val firstName = binding.firstName.toString()
-        val lastName = binding.lastName.toString()
-        val email = binding.email.toString()
-        val pwd = binding.email.toString()
-        val pwdCheck = binding.pwdCheck.toString()
+        val firstName = binding.firstName.text.toString()
+        val lastName = binding.lastName.text.toString()
+        val email = binding.email.text.toString()
+        val pwd = binding.email.text.toString()
+        val pwdCheck = binding.pwdCheck.text.toString()
 
         var returnedEmail : String?= null
 
