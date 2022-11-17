@@ -16,8 +16,10 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.myapplication.HomeActivity
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.ui.recyclerview.RecyclerAdapter
@@ -28,11 +30,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
-
-
-    // Add RecyclerView member
-    var recyclerView: RecyclerView? = null
-    private val homeFragmentAdapter = RecyclerAdapter()
+    private lateinit var adapter: RecyclerAdapter
+    private lateinit var recyclerView: RecyclerView
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -55,22 +54,27 @@ class HomeFragment : Fragment() {
 //            textView.text = it
 //        }
 
-        recyclerView = binding.recyclerview
-        recyclerView!!.setHasFixedSize(true)
-        recyclerView!!.layoutManager = LinearLayoutManager(activity)
-        recyclerView!!.adapter = homeFragmentAdapter
         return root
     }
 
-//    override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(itemView, savedInstanceState)
-//        binding.recyclerview.apply {
-//            // set a LinearLayoutManager to handle Android
-//            // RecyclerView behavior
-//            layoutManager = LinearLayoutManager(activity)
-//            adapter = RecyclerAdapter()
-//        }
-//    }
+    private fun addData() {
+        for (i in 0..99) {
+
+        }
+    }
+
+    override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(itemView, savedInstanceState)
+        val layoutManager = LinearLayoutManager(context)
+//        recyclerView = binding.recyclerviewHome
+//        recyclerView.layoutManager = layoutManager
+//        recyclerView.setHasFixedSize(true)
+//        adapter = RecyclerAdapter(1234)
+//        recyclerView.adapter = adapter
+        binding.recyclerviewHome.layoutManager = layoutManager
+        binding.recyclerviewHome.adapter = RecyclerAdapter(1234)
+        binding.recyclerviewHome.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
