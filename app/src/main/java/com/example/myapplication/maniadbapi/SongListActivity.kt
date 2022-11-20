@@ -20,7 +20,7 @@ class SongListActivity : AppCompatActivity() {
         binding.apply {
             lifecycleOwner = this@SongListActivity
             activity = this@SongListActivity
-            vm = mainViewModel
+//            vm = mainViewModel
             recyclerView.adapter = mainAdapter
         }
 

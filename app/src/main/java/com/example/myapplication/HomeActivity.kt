@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.view.Window
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -13,8 +14,6 @@ import com.example.myapplication.ui.home.HomeFragment
 import com.example.myapplication.ui.notifications.NotificationsFragment
 
 class HomeActivity : AppCompatActivity() {
-
-
 
     private lateinit var binding: ActivityHomeBinding
 

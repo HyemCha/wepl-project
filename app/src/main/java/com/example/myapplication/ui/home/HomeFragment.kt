@@ -1,37 +1,41 @@
 package com.example.myapplication.ui.home
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.myapplication.HomeActivity
 import com.example.myapplication.databinding.FragmentHomeBinding
+import com.example.myapplication.ui.recyclerview.HomeAdapter
 import com.example.myapplication.ui.recyclerview.RecyclerAdapter
-import com.google.android.gms.location.*
 
 class HomeFragment : Fragment() {
 
 
+    // 1. Context를 할당할 변수를 프로퍼티로 선언(어디서든 사용할 수 있게)
+    private lateinit var homeActivity: HomeActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        // 2. Context를 액티비티로 형변환해서 할당
+        homeActivity = context as HomeActivity
+
+    }
     private var _binding: FragmentHomeBinding? = null
 
     private lateinit var adapter: RecyclerAdapter
     private lateinit var recyclerView: RecyclerView
+
+//    private val homeFragmentViewModel by viewModels<HomeViewModel>()
+    private val homeFragmentAdapter1 = HomeAdapter()
+    private val homeFragmentAdapter2 = HomeAdapter()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -54,31 +58,58 @@ class HomeFragment : Fragment() {
 //            textView.text = it
 //        }
 
+        binding.apply {
+            classic.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            classic.adapter = homeFragmentAdapter1
+            classic.isHorizontalScrollBarEnabled = true
+
+            jpop.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            jpop.adapter = homeFragmentAdapter2
+            jpop.isHorizontalScrollBarEnabled = true
+        }
+
+        homeViewModel.apply{
+            mySong.observe(viewLifecycleOwner, Observer {
+                homeFragmentAdapter1.submitList(it)
+            })
+            getSong("interstella")
+        }
+        homeViewModel.apply{
+            mySong.observe(viewLifecycleOwner, Observer {
+                homeFragmentAdapter2.submitList(it)
+            })
+            getSong("hello")
+        }
+//        homeViewModel.getAlbum("Remapping The Human Soul")
+//        homeViewModel.getSong("classic")
         return root
     }
 
-    private fun addData() {
-        for (i in 0..99) {
-
-        }
-    }
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
-        val layoutManager = LinearLayoutManager(context)
+//        val homeFragmentAdapter1: HomeAdapter
+//        val layoutManager = LinearLayoutManager(context)
 //        recyclerView = binding.recyclerviewHome
 //        recyclerView.layoutManager = layoutManager
 //        recyclerView.setHasFixedSize(true)
 //        adapter = RecyclerAdapter(1234)
 //        recyclerView.adapter = adapter
-        binding.recyclerviewHome.layoutManager = layoutManager
-        binding.recyclerviewHome.adapter = RecyclerAdapter(1234)
-        binding.recyclerviewHome.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
+//        binding.recyclerviewHome.layoutManager = layoutManager
+//        binding.recyclerviewHome.adapter = RecyclerAdapter(1234)
+//        binding.recyclerviewHome.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
+
+
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
 
 }
