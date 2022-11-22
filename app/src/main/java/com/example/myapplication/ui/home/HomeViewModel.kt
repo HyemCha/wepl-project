@@ -8,12 +8,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.envs.TAG
 import com.example.myapplication.maniadbapi.model.Item
 import com.example.myapplication.maniadbapi.repository.ManiaRepository
+import com.example.myapplication.youtubeapi.YouTubeRepository
+import com.example.myapplication.youtubeapi.YouTubeResponse
+import com.example.myapplication.youtubeapi.YouTubeRetrofitInstance
+import com.example.myapplication.youtubeapi.YouTubeService
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeViewModel : ViewModel() {
 
 
     private val repository = ManiaRepository.get()
+//    private val youTubeRepository = YouTubeRepository.get()
 
     private val _mySong : MutableLiveData<List<Item>> = MutableLiveData()
     val mySong: LiveData<List<Item>> get() = _mySong
@@ -30,7 +38,42 @@ class HomeViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-
+    //    private val retrofit = YouTubeRetrofitInstance.getInstance()
+//    private val retrofitService: YouTubeService = retrofit.create(YouTubeService::class.java)
+//    private val call: Call<YouTubeResponse>? = retrofitService?.getYouTubePlaylistItems()
+//
+//    fun getPlaylistItems() {
+//        viewModelScope.launch{
+//            call?.enqueue(object : Callback<YouTubeResponse> {
+//                override fun onResponse(
+//                    call: Call<YouTubeResponse>,
+//                    response: Response<YouTubeResponse>
+//                ) {
+//                    // 응답 성공
+//                    if (response.isSuccessful) {
+//                        Log.d("Call-success", "success-${response.body()}")
+//                    } else {
+//                        Log.d("Call-error", "error-${response.errorBody()}")
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<YouTubeResponse>, t: Throwable) {
+//                    Log.d("onFailue", "failure")
+//                }
+//            })
+//        }
+//    }
+//    fun getPlaylistItems() {
+//        viewModelScope.launch {
+//            youTubeRepository.getPlaylistItems().let { response ->
+//                if (response.isSuccessful) {
+//                    Log.d("getplaylistItems-s", "${response.body()}")
+//                }else{
+//                    Log.d("playlist-fㅜㅜ", "${response.code()}")
+//                }
+//            }
+//        }
+//    }
     fun getSong(keyword: String){
         _state.value = false // 로딩
         viewModelScope.launch {

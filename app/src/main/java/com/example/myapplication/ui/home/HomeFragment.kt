@@ -2,6 +2,7 @@ package com.example.myapplication.ui.home
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,15 @@ import com.example.myapplication.HomeActivity
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.ui.recyclerview.HomeAdapter
 import com.example.myapplication.ui.recyclerview.RecyclerAdapter
+import com.example.myapplication.youtubeapi.YouTubeRepository
+import com.example.myapplication.youtubeapi.YouTubeResponse
+import com.example.myapplication.youtubeapi.YouTubeRetrofitInstance
+import com.example.myapplication.youtubeapi.YouTubeService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
-
 
     // 1. Context를 할당할 변수를 프로퍼티로 선언(어디서든 사용할 수 있게)
     private lateinit var homeActivity: HomeActivity
@@ -32,6 +39,8 @@ class HomeFragment : Fragment() {
 
     private lateinit var adapter: RecyclerAdapter
     private lateinit var recyclerView: RecyclerView
+
+    private val youTubeRepository = YouTubeRepository()
 
 //    private val homeFragmentViewModel by viewModels<HomeViewModel>()
     private val homeFragmentAdapter1 = HomeAdapter()
@@ -71,17 +80,15 @@ class HomeFragment : Fragment() {
         homeViewModel.apply{
             mySong.observe(viewLifecycleOwner, Observer {
                 homeFragmentAdapter1.submitList(it)
+                homeFragmentAdapter2.submitList(it)
             })
             getSong("interstella")
         }
-        homeViewModel.apply{
-            mySong.observe(viewLifecycleOwner, Observer {
-                homeFragmentAdapter2.submitList(it)
-            })
-            getSong("hello")
-        }
 //        homeViewModel.getAlbum("Remapping The Human Soul")
 //        homeViewModel.getSong("classic")
+
+
+
         return root
     }
 
@@ -100,7 +107,7 @@ class HomeFragment : Fragment() {
 //        binding.recyclerviewHome.adapter = RecyclerAdapter(1234)
 //        binding.recyclerviewHome.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-
+        youTubeRepository.fetchYouTubeData()
 
     }
 

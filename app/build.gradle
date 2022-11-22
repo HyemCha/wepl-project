@@ -79,10 +79,10 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
-    //Room database
+    // Room database
     def room_version = "2.4.3"
     implementation "androidx.room:room-runtime:$room_version"
-//    implementation 'androidx.room:room-ktx:2.4.3'
+    //implementation 'androidx.room:room-ktx:2.4.3'
     annotationProcessor "androidx.room:room-compiler:$room_version"
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:$room_version"
@@ -107,4 +107,10 @@ dependencies {
 
     // about UserLocation
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    // youtube api
+//    implementation 'com.google.apis:google-api-services-youtube:v3-rev183-1.22.0'
+//    implementation 'com.google.http-client:google-http-client-android:+'
+//    implementation 'com.google.api-client:google-api-client-android:+'
+//    implementation 'com.google.api-client:google-api-client-gson:+'
 }

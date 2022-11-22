@@ -2,10 +2,15 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.maniadbapi.SongListActivity
+import com.example.myapplication.youtubeapi.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         binding.rBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, HomeActivity::class.java)
             startActivity(intent)
@@ -26,6 +30,5 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, SongListActivity::class.java)
             startActivity(intent)
         }
-
     }
 }

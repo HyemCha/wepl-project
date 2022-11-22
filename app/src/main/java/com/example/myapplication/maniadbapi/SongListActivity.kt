@@ -18,21 +18,21 @@ class SongListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.apply {
-            lifecycleOwner = this@SongListActivity
-            activity = this@SongListActivity
-//            vm = mainViewModel
-            recyclerView.adapter = mainAdapter
+//            lifecycleOwner = this@SongListActivity
+//            activity = this@SongListActivity
+////            vm = mainViewModel
+//            recyclerView.adapter = mainAdapter
         }
 
 
 //        binding = DataBindingUtil.setContentView(this, R.layout.activity_song_list)
 
-//        binding.apply {
-//            lifecycleOwner = this@SongListActivity
-//            activity = this@SongListActivity
+        binding.apply {
+            lifecycleOwner = this@SongListActivity
+            activity = this@SongListActivity
 //            vm = mainViewModel
-//            recyclerView.adapter = mainAdapter
-//        }
+            recyclerView.adapter = mainAdapter
+        }
 
         mainViewModel.getAlbum("Remapping The Human Soul")
 

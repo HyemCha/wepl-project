@@ -24,6 +24,7 @@ class MainViewModel() : ViewModel() {
         _state.value = true
     }
 
+
     fun getSong(keyword: String){
         _state.value = false // 로딩
         viewModelScope.launch {

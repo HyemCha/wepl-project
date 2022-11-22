@@ -2,6 +2,7 @@ package com.example.myapplication.ui.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -30,6 +31,9 @@ class HomeAdapter() : ListAdapter<Item, HomeAdapter.HomeViewHolder>(diffUtil) {
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.itemView.setOnClickListener {
+            Toast.makeText(it.context,position.toString(), Toast.LENGTH_SHORT).show()
+        }
     }
 
     // diffUtil 추가 (고유 값인 id로 비교 하는게 좋음. TEST 위해 title로 함)

@@ -6,6 +6,9 @@
         <variable
             name="item"
             type="com.example.myapplication.maniadbapi.model.Item" />
+        <variable
+            name="hvt"
+            type="com.example.myapplication.youtubeapi.Snippet" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,5 +34,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{hvt.title}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/songTitle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
