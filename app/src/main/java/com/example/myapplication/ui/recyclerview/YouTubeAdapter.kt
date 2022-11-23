@@ -1,10 +1,12 @@
 package com.example.myapplication.ui.recyclerview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.compose.ui.layout.Layout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.RoundItemBinding
+import com.example.myapplication.envs.TAG_D
 import com.example.myapplication.maniadbapi.adapter.MyBindingAdapter.setImage
 import com.example.myapplication.youtubeapi.Items
 
@@ -26,6 +28,7 @@ class YouTubeAdapter(youTubeItems: ArrayList<Items>) : RecyclerView.Adapter<YouT
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(itemList[position])
+        Log.d(TAG_D, "에엥=${itemList[position]}")
     }
 
     override fun getItemCount() = itemList!!.size
