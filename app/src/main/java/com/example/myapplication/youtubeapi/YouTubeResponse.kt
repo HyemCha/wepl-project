@@ -60,7 +60,6 @@ data class Snippet(
     @SerializedName("channelTitle" ) var channelTitle : String?     = null
 )
 
-@Root(name = "items", strict = false)
 data class Items(
     @SerializedName("id") var id: String? = null,
     @SerializedName("snippet") var snippet: Snippet? = Snippet()

@@ -15,13 +15,12 @@ import com.example.myapplication.HomeActivity
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.ui.recyclerview.HomeAdapter
 import com.example.myapplication.ui.recyclerview.RecyclerAdapter
+import com.example.myapplication.ui.recyclerview.YouTubeAdapter
 import com.example.myapplication.youtubeapi.YouTubeRepository
-import com.example.myapplication.youtubeapi.YouTubeResponse
-import com.example.myapplication.youtubeapi.YouTubeRetrofitInstance
-import com.example.myapplication.youtubeapi.YouTubeService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
@@ -75,6 +74,8 @@ class HomeFragment : Fragment() {
             jpop.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             jpop.adapter = homeFragmentAdapter2
             jpop.isHorizontalScrollBarEnabled = true
+            jpop.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            jpop.adapter = YouTubeAdapter(youTubeRepository.fetchYouTubeData())
         }
 
         homeViewModel.apply{
@@ -107,7 +108,12 @@ class HomeFragment : Fragment() {
 //        binding.recyclerviewHome.adapter = RecyclerAdapter(1234)
 //        binding.recyclerviewHome.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-        youTubeRepository.fetchYouTubeData()
+//        youTubeRepository.fetchYouTubeData()
+        CoroutineScope(Dispatchers.Main).launch{
+            var list =
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) { youTubeRepository.fetchYouTubeData() }
+            Log.d("에엥ㅇ", list.toString())
+        }
 
     }
 

@@ -38,6 +38,9 @@ class HomeViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
+    // YouTube Data
+
+
     //    private val retrofit = YouTubeRetrofitInstance.getInstance()
 //    private val retrofitService: YouTubeService = retrofit.create(YouTubeService::class.java)
 //    private val call: Call<YouTubeResponse>? = retrofitService?.getYouTubePlaylistItems()

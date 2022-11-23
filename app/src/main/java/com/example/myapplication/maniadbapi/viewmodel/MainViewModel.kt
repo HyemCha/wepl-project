@@ -31,6 +31,7 @@ class MainViewModel() : ViewModel() {
             repository.getSong(keyword).let { response ->
                 if(response.isSuccessful){
                     val list = response.body()!!.channel!!.itemList
+                    Log.d("에엥3", "${response.body()}")
                     if (list != null) {
                         // 결과값 &nbsp; 제거
                         for(i in list){

@@ -23,13 +23,13 @@ interface YouTubeService {
     ): Response<YouTubeResponse>?
 
     @GET("youtube/v3/playlistItems")
-    fun getYouTubePlaylistItems(
+    suspend fun getYouTubePlaylistItems(
         @Query("key") apiKey: String = YOUTUBE_API_KEY,
         @Query("fields") fields: String = "items(id,snippet(title,thumbnails,channelTitle))",
         @Query("part") part: String = "snippet",
         @Query("maxResult") maxResult: String = "10",
         @Query("playlistId") playlistId: String = "PLXItnL0261EJGhR1_h3zuQBNtopFFXg0u"
-    ) : Call<YouTubeResponse>
+    ) : Response<YouTubeResponse>
 
 
 
