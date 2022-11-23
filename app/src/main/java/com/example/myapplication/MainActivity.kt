@@ -7,12 +7,20 @@ import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.maniadbapi.SongListActivity
+import com.example.myapplication.roomdb.db.WeplDatabase
+import com.example.myapplication.roomdb.entity.Region
 import com.example.myapplication.youtubeapi.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+// 1km = 0.008993255058705971도
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var weplDB: WeplDatabase
 
     private lateinit var binding : ActivityMainBinding
 
@@ -29,6 +37,12 @@ class MainActivity : AppCompatActivity() {
         binding.lBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, SongListActivity::class.java)
             startActivity(intent)
+        }
+
+        val region = Region(null, "","", "", "숲, ")
+
+        GlobalScope.launch(Dispatchers.IO) {
+            weplDB.regionDao().insert(region)
         }
     }
 }

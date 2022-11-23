@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.ActivityHomeBinding
 import com.example.myapplication.databinding.ActivitySignupBinding
+import com.example.myapplication.envs.TAG_D
 import com.example.myapplication.roomdb.db.WeplDatabase
 import com.example.myapplication.roomdb.entity.User
+import com.example.myapplication.viewmodel.SignupViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,7 +25,9 @@ class SignupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_signup)
+
+        val signupViewModel = ViewModelProvider(this)[SignupViewModel::class.java]
+
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -31,20 +36,17 @@ class SignupActivity : AppCompatActivity() {
         binding.button1.setOnClickListener{
             if(isAlreadyJoined()) {
                 Toast.makeText(this, "이미 가입하셨네요!", Toast.LENGTH_SHORT).show()
-//                val intent = Intent(this@SignupActivity, HomeActivity::class.java)
-//                startActivity(intent)
             }
             else if (checkPwd()) {
-                Toast.makeText(this, "아ㅓ니", Toast.LENGTH_SHORT).show()
                 writeData()
             }else {
                 Toast.makeText(this, "비밀번호가 일지하지 않습니다👾", Toast.LENGTH_SHORT).show()
             }
         }
 
-        binding.button2.setOnClickListener{
-            readData()
-        }
+//        binding.button2.setOnClickListener{
+//            readData()
+//        }
     }
     private fun writeData() {
         val firstName = binding.firstName.text.toString()
@@ -64,30 +66,31 @@ class SignupActivity : AppCompatActivity() {
             binding.pwd.text.clear()
             binding.pwdCheck.text.clear()
 
-            Toast.makeText(this@SignupActivity, "welcome " + firstName, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@SignupActivity, "welcome $firstName 🎉", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private suspend fun displayData(user: User) {
-        withContext(Dispatchers.Main){
-            binding.tvFirstName.text = user.firstName
-            binding.tvLastName.text = user.lastName
-            binding.tvEmail.text = user.email
-        }
-    }
+//    private suspend fun displayData(user: User) {
+//        withContext(Dispatchers.Main){
+//            binding.tvFirstName.text = user.firstName
+//            binding.tvLastName.text = user.lastName
+//            binding.tvEmail.text = user.email
+//        }
+//    }
 
-    private fun readData() {
-        val firstName = binding.firstName.text.toString()
-
-        if (firstName.isNotEmpty()) {
-            lateinit var user: User
-
-            GlobalScope.launch {
-                user = weplDB.userDao().findByFirstName(firstName)
-                displayData(user)
-            }
-        }
-    }
+//    private fun readData() {
+//        val searchName = binding.searchName.text.toString()
+//
+//        if (searchName.isNotEmpty()) {
+//            lateinit var user: User
+//
+//            GlobalScope.launch {
+//                user = weplDB.userDao().findByFirstName(searchName)
+//                Log.d(TAG_D, "$user")
+//                displayData(user)
+//            }
+//        }
+//    }
 
     private fun checkPwd(): Boolean {
         val pwd = binding.pwd.text.toString()

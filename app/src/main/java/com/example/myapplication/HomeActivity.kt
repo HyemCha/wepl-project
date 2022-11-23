@@ -30,11 +30,11 @@ class HomeActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_recommend, R.id.navigation_notifications
+                R.id.navigation_recommend, R.id.navigation_home, R.id.navigation_notifications
             )
         )
 
-        changeFragment(HomeFragment())
+        changeFragment(RecommendFragment())
 
         navView.run {
             setOnItemSelectedListener { item ->
@@ -52,7 +52,6 @@ class HomeActivity : AppCompatActivity() {
                 true
             }
         }
-
     }
 
     private fun changeFragment(fragment: Fragment) {

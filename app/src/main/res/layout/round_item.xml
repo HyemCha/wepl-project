@@ -18,10 +18,10 @@
 
         <ImageView
             android:id="@+id/imageView"
+            android:scaleType="centerCrop"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="@drawable/round"
-            android:scaleType="matrix"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

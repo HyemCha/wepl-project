@@ -40,8 +40,6 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
-    private val homeFragmentAdapter1 = HomeAdapter()
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -66,13 +64,7 @@ class HomeFragment : Fragment() {
 //            textView.text = it
 //        }
 
-        homeViewModel.apply {
-            mySong.observe(viewLifecycleOwner, Observer {
-                homeFragmentAdapter1.submitList(it)
-            })
-            getSong("interstella")
-        }
-        Log.d("에엥이", getString(R.string.playlistId1))
+
         youTubeViewModel.refreshPlaylistItems(getString(R.string.playlistId1))
         youTubeViewModel.youTubePlaylistItemsLiveData.observe(viewLifecycleOwner) { response ->
             if (response == null) {
@@ -84,8 +76,8 @@ class HomeFragment : Fragment() {
                 return@observe
             }
             binding.apply {
-                jpop.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                jpop.adapter = YouTubeAdapter(response)
+                homeRv1.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                homeRv1.adapter = YouTubeAdapter(response)
             }
         }
 

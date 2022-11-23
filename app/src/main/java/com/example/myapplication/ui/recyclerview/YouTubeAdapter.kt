@@ -16,7 +16,8 @@ class YouTubeAdapter(youTubeItems: ArrayList<Items>) : RecyclerView.Adapter<YouT
     inner class ViewHolder(private val binding: RoundItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Items) {
-            item.snippet!!.thumbnails!!.medium!!.url!!.let { binding.imageView.setImage(it) }
+            binding.imageView.clipToOutline = true
+            item.snippet!!.thumbnails!!.high!!.url!!.let { binding.imageView.setImage(it) }
             binding.songTitle.text = item.snippet!!.title
         }
     }

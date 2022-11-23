@@ -116,6 +116,7 @@ class RecommendFragment : Fragment() {
             }
         } else {
             Toast.makeText(homeActivity, "Please Enable your Location service", Toast.LENGTH_SHORT).show()
+            requestPermission()
         }
     }
 
@@ -183,7 +184,7 @@ class RecommendFragment : Fragment() {
         var geoCoder = Geocoder(homeActivity, Locale.getDefault())
         var Adress: List<Address> = geoCoder.getFromLocation(lat, long, 1)
 
-        CityName = Adress.get(0).locality
+        CityName = Adress[0].locality
         return CityName
     }
 
@@ -193,7 +194,7 @@ class RecommendFragment : Fragment() {
         var geoCoder = Geocoder(homeActivity, Locale.getDefault())
         var Adress: List<Address> = geoCoder.getFromLocation(lat, long, 1)
 
-        CountryName = Adress.get(0).countryName
+        CountryName = Adress[0].getAddressLine(0)
         return CountryName
     }
 
