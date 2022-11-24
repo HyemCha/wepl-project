@@ -27,7 +27,7 @@ interface YouTubeService {
         @Query("key") apiKey: String = YOUTUBE_API_KEY,
         @Query("fields") fields: String = "items(id,snippet(title,thumbnails,channelTitle))",
         @Query("part") part: String = "snippet",
-        @Query("maxResult") maxResult: String = "10",
+        @Query("maxResults") maxResults: String = "10",
         @Query("playlistId") playlistId: String = ""
     ) : Response<YouTubeResponse>
 

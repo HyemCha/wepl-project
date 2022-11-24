@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.envs.TAG_D
 import com.example.myapplication.maniadbapi.SongListActivity
 import com.example.myapplication.roomdb.db.WeplDatabase
 import com.example.myapplication.roomdb.entity.Region
+import com.example.myapplication.roomdb.entity.RegionKeywords
 import com.example.myapplication.youtubeapi.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -39,10 +41,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val region = Region(null, "","", "", "숲, ")
 
-        GlobalScope.launch(Dispatchers.IO) {
-            weplDB.regionDao().insert(region)
-        }
     }
 }
