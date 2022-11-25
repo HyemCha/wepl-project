@@ -2,6 +2,7 @@ package com.example.myapplication.ui.recommend
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.HomeActivity
 import com.example.myapplication.R
+import com.example.myapplication.YoutubeActivity
 import com.example.myapplication.databinding.FragmentRecommendBinding
 import com.example.myapplication.envs.PLAYLIST_ID_1
 import com.example.myapplication.roomdb.db.WeplDatabase
@@ -76,9 +78,9 @@ class RecommendFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val dashboardViewModel =
-            ViewModelProvider(this).get(RecommendViewModel::class.java)
+            ViewModelProvider(this)[RecommendViewModel::class.java]
         val youTubeViewModel: YouTubeViewModel by lazy {
-            ViewModelProvider(this).get(YouTubeViewModel::class.java)
+            ViewModelProvider(this)[YouTubeViewModel::class.java]
         }
 
         _binding = FragmentRecommendBinding.inflate(inflater, container, false)
@@ -104,7 +106,7 @@ class RecommendFragment : Fragment() {
                 }
                 binding.apply {
                     recommendRecyclerview.layoutManager = LinearLayoutManager(context)
-                    recommendRecyclerview.adapter = RecommendAdapter(response)
+                    recommendRecyclerview.adapter = RecommendAdapter(homeActivity, response)
                 }
             }
 
@@ -124,9 +126,28 @@ class RecommendFragment : Fragment() {
         _binding = null
     }
 
-    private fun getLocationInTheScope(): List<Song>?{
-        var songList: List<Song> ?= null
+    private fun playYoutube(videoId:String) {
+        var intent = Intent(homeActivity, YoutubeActivity::class.java)
+        intent.putExtra("videoId", videoId)
+        startActivity(intent)
+    }
+
+    // 반경1km내에 존재하는지 확인하는 함수
+
+
+    // 존재하면 해당하는 지역 정보 가져오기
+    private fun getLocationInTheScope(): Region?{
+        var regionInfo: Region ?= null
        // db에서 반겨 1km내에 존재하는 관광지 있으면 true(@Query getRegionByLocation()) globalscope으로 db.regiondao실행->해당하는 노래 리스트 가져오기
+        GlobalScope.launch(Dispatchers.IO) {
+
+        }
+        return regionInfo
+    }
+
+    // 지역정보에 해당하는 노래 가져오기
+    private fun getSongListByLocation(loc: Int): List<Song>? {
+        var songList : List<Song>? = null
         GlobalScope.launch(Dispatchers.IO) {
 
         }

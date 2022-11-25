@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
         val homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
         val youTubeViewModel: YouTubeViewModel by lazy {
-            ViewModelProvider(this).get(YouTubeViewModel::class.java)
+            ViewModelProvider(this)[YouTubeViewModel::class.java]
         }
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
