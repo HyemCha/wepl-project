@@ -24,8 +24,9 @@ class YouTubeViewModel : ViewModel() {
                     i.snippet!!.title  = if (i.snippet!!.title.toString()
                                 .contains("[playlist]")
                         ) i.snippet!!.title.toString().replace("[playlist]", "")
-                            .trim() else i.snippet!!.title.toString().replace("(playlist)", "")
-                            .trim()
+                            .trim() else if(i.snippet!!.title.toString()
+                            .contains("(playlist)")) i.snippet!!.title.toString().replace("(playlist)", "")
+                            .trim() else i.snippet!!.title
                 }
             }
             _youTubePlaylistItemsLiveData.postValue(response)

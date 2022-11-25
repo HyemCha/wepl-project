@@ -31,6 +31,12 @@ interface YouTubeService {
         @Query("playlistId") playlistId: String = ""
     ) : Response<YouTubeResponse>
 
-
+    suspend fun getYouTubeSongsByKeywords(
+        @Query("key") apiKey: String = YOUTUBE_API_KEY,
+        @Query("fields") fields: String = "items(id,snippet(title,thumbnails,channelTitle))",
+        @Query("part") part: String = "snippet",
+        @Query("maxResults") maxResults: String = "10",
+        @Query("playlistId") playlistId: String = ""
+    ):Response<YouTubeResponse>
 
 }

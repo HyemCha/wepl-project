@@ -9,6 +9,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.provider.Settings.Global
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,21 +21,33 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.HomeActivity
+import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentRecommendBinding
+import com.example.myapplication.envs.PLAYLIST_ID_1
+import com.example.myapplication.roomdb.db.WeplDatabase
+import com.example.myapplication.roomdb.entity.Region
+import com.example.myapplication.roomdb.entity.Song
+import com.example.myapplication.ui.recyclerview.RecommendAdapter
+import com.example.myapplication.youtubeapi.YouTubeViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class RecommendFragment : Fragment() {
+    private lateinit var weplDB: WeplDatabase
 
     // 1. Context를 할당할 변수를 프로퍼티로 선언(어디서든 사용할 수 있게)
     lateinit var homeActivity: HomeActivity
-    lateinit var cont:Context
+    lateinit var cont: Context
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,7 +60,6 @@ class RecommendFragment : Fragment() {
     // create some variables that we need
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var locationRequest: LocationRequest
-
 
     //the permission id is just an int that must be unique so you can use any number
     val PERMISSION_ID = 99
@@ -65,24 +77,44 @@ class RecommendFragment : Fragment() {
     ): View {
         val dashboardViewModel =
             ViewModelProvider(this).get(RecommendViewModel::class.java)
+        val youTubeViewModel: YouTubeViewModel by lazy {
+            ViewModelProvider(this).get(YouTubeViewModel::class.java)
+        }
 
         _binding = FragmentRecommendBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        var loc: TextView = binding.location
 
         // let's initiate the fused..providerClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(homeActivity)
 
-        // let's add the Event to Our Toast!
-        textView.setOnClickListener{
-            getLastLocation()
-            // create a new function that return the city name and the country name
-            // let's this value add to toast
+        getLastLocation(loc)
+        // create a new function that return the city name and the country name
+        // let's this value add to toast
+
+        //위도 경도 범위가 1번에 해당하면 1에 해당한느 플레이리스트 가져오는 코드
+        var myLoc = 1
+        if (myLoc == 1) {
+            youTubeViewModel.refreshPlaylistItems(PLAYLIST_ID_1)
+            youTubeViewModel.youTubePlaylistItemsLiveData.observe(viewLifecycleOwner){response->
+                if (response == null) {
+                    Toast.makeText(homeActivity, "Unsuccessful netsork call!", Toast.LENGTH_SHORT).show()
+                    return@observe
+                }
+                binding.apply {
+                    recommendRecyclerview.layoutManager = LinearLayoutManager(context)
+                    recommendRecyclerview.adapter = RecommendAdapter(response)
+                }
+            }
+
         }
+
+//        if (true) {
+//
+//        } else {
+//
+//        }
 
         return root
     }
@@ -92,16 +124,23 @@ class RecommendFragment : Fragment() {
         _binding = null
     }
 
-    //
+    private fun getLocationInTheScope(): List<Song>?{
+        var songList: List<Song> ?= null
+       // db에서 반겨 1km내에 존재하는 관광지 있으면 true(@Query getRegionByLocation()) globalscope으로 db.regiondao실행->해당하는 노래 리스트 가져오기
+        GlobalScope.launch(Dispatchers.IO) {
+
+        }
+        return songList
+    }
 
     //a function that will allow us to get the last Location
-    private fun getLastLocation() {
+    private fun getLastLocation(loc: TextView) {
         // first - check permission
         if (checkPermission()) {
             //Now check the location service is enabled
             if (isLocationEnabled()) {
                 // let's get the Location
-                fusedLocationProviderClient.lastLocation.addOnCompleteListener{task->
+                fusedLocationProviderClient.lastLocation.addOnCompleteListener { task ->
                     var location: Location? = task.result
                     if (location == null) {
                         // if the location is null wd will get the new user location
@@ -109,29 +148,34 @@ class RecommendFragment : Fragment() {
                         // don't forget the add new location
                         getNewLocation()
                     } else {
-                        Toast.makeText(homeActivity, "위도 : " + location.latitude + " 경도 : " +
-                                location.longitude + "\n" + "cytiname : " + getCityName(location.latitude, location.longitude) + " 나라 : " + getCountryName(location.latitude, location.longitude), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            homeActivity,
+                            "위도 : " + location.latitude + " 경도 : " +
+                                    location.longitude + "\n" + "cytiname : " + getCityName(
+                                location.latitude,
+                                location.longitude
+                            ) + " 나라 : " + getCountryName(location.latitude, location.longitude),
+                            Toast.LENGTH_LONG
+                        ).show()
+                        loc.text = getCountryName(location.latitude, location.longitude)
                     }
                 }
             }
         } else {
-            Toast.makeText(homeActivity, "Please Enable your Location service", Toast.LENGTH_SHORT).show()
+            Toast.makeText(homeActivity, "Please Enable your Location service", Toast.LENGTH_SHORT)
+                .show()
             requestPermission()
         }
     }
 
     //
     private fun getNewLocation() {
-//        locationRequest = LocationRequest()
-//        locationRequest.priority = Priority.PRIORITY_HIGH_ACCURACY
-//        locationRequest.interval = 0
-//        locationRequest.fastestInterval = 0
-//        locationRequest.numUpdates = 2
-        locationRequest.apply{
+        locationRequest.apply {
             LocationRequest()
             priority = Priority.PRIORITY_HIGH_ACCURACY
             interval = 0
-            fastestInterval = 0
+//            fastestInterval = 0
+            minUpdateDistanceMeters
             numUpdates = 2
         }
         fusedLocationProviderClient!!.requestLocationUpdates(
@@ -145,16 +189,30 @@ class RecommendFragment : Fragment() {
             val lastLocation: Location? = p0.lastLocation
             // set the new location
             if (lastLocation != null) {
-                Toast.makeText(homeActivity, "위도 : " + lastLocation?.latitude + " 경도 : " + lastLocation?.longitude +
-                        lastLocation.longitude + "\n" + "cytiname : " + getCityName(lastLocation.latitude, lastLocation.longitude) + " 나라 : " + getCountryName(lastLocation.latitude, lastLocation.longitude), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    homeActivity,
+                    "위도 : " + lastLocation.latitude + " 경도 : " + lastLocation?.longitude +
+                            lastLocation.longitude + "\n" + "cytiname : " + getCityName(
+                        lastLocation.latitude,
+                        lastLocation.longitude
+                    ) + " 나라 : " + getCountryName(lastLocation.latitude, lastLocation.longitude),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
 
     // first, a function that will check the uses permission
     private fun checkPermission(): Boolean {
-        if(ActivityCompat.checkSelfPermission(homeActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(homeActivity, Manifest.permission.ACCESS_COARSE_LOCATION) ==  PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                homeActivity,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(
+                homeActivity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             return true
         }
         return false
@@ -165,17 +223,22 @@ class RecommendFragment : Fragment() {
         // 위치 권한 요구
         ActivityCompat.requestPermissions(
             homeActivity,
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
             PERMISSION_ID
         )
 
     }
 
     // a function that check if the Loction service of the device is enabled
-    private fun isLocationEnabled() : Boolean {
-        var locationManager = homeActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    private fun isLocationEnabled(): Boolean {
+        var locationManager =
+            homeActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER)
+            LocationManager.NETWORK_PROVIDER
+        )
     }
 
     // function to get the city name
@@ -206,7 +269,7 @@ class RecommendFragment : Fragment() {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // this is a built in function that check the permission result
         // using it for debigging the code
-        if(requestCode == PERMISSION_ID){
+        if (requestCode == PERMISSION_ID) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("Debug", "You Have the Permission")
             }

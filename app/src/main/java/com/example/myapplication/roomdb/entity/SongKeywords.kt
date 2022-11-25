@@ -6,16 +6,16 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "region_keywords",
+    tableName = "song_keywords",
     foreignKeys = [ForeignKey(
-        entity = Region::class,
+        entity = Song::class,
         parentColumns = arrayOf("id"),
-        childColumns = arrayOf("region_id"),
+        childColumns = arrayOf("song_id"),
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class RegionKeywords(
+data class SongKeywords(
     @PrimaryKey(autoGenerate = true) val id: Int?,
-    @ColumnInfo(name = "region_id") val regionId: Int?,
+    @ColumnInfo(name = "song_id") val songId: Int?,
     @ColumnInfo(name = "keywords") val keywords: String?
 )
