@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.HomeActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentHomeBinding
+import com.example.myapplication.envs.HOME_PID_3
 import com.example.myapplication.ui.recyclerview.HomeAdapter
 import com.example.myapplication.ui.recyclerview.RecyclerAdapter
 import com.example.myapplication.ui.recyclerview.YouTubeAdapter
@@ -71,7 +72,52 @@ class HomeFragment : Fragment() {
             }
             binding.apply {
                 homeRv1.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                homeRv1.adapter = YouTubeAdapter(response)
+                homeRv1.adapter = YouTubeAdapter(homeActivity, response)
+            }
+        }
+        youTubeViewModel.refreshPlaylistItems("PLlEI3XVf9Q8DM2ln0FlcKk0w-uf1Ef5Jg")
+        youTubeViewModel.youTubePlaylistItemsLiveData2.observe(viewLifecycleOwner) { response ->
+            if (response == null) {
+                Toast.makeText(
+                    homeActivity,
+                    "Unsuccessful network call!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@observe
+            }
+            binding.apply {
+                homeRv2.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                homeRv2.adapter = YouTubeAdapter(homeActivity, response)
+            }
+        }
+        youTubeViewModel.refreshPlaylistItems("PLlEI3XVf9Q8DM2ln0FlcKk0w-uf1Ef5Jg")
+        youTubeViewModel.youTubePlaylistItemsLiveData2.observe(viewLifecycleOwner) { response ->
+            if (response == null) {
+                Toast.makeText(
+                    homeActivity,
+                    "Unsuccessful network call!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@observe
+            }
+            binding.apply {
+                homeRv2.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                homeRv2.adapter = YouTubeAdapter(homeActivity, response)
+            }
+        }
+        youTubeViewModel.refreshPlaylistItems(HOME_PID_3)
+        youTubeViewModel.youTubePlaylistItemsLiveData3.observe(viewLifecycleOwner) { response ->
+            if (response == null) {
+                Toast.makeText(
+                    homeActivity,
+                    "Unsuccessful network call!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@observe
+            }
+            binding.apply {
+                homeRv3.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                homeRv3.adapter = YouTubeAdapter(homeActivity, response)
             }
         }
 

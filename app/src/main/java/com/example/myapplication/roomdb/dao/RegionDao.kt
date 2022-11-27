@@ -12,6 +12,9 @@ interface RegionDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(region: Region)
 
+    @Query("SELECT * FROM region")
+    fun getAllRegion(): List<Region>
+
 //    @Query("SELECT * FROM region WHERE address LIKE '%' || :keyword || '%'")
 //    fun getRegionByKeyword(keyword: String): Region
 

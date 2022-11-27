@@ -33,8 +33,12 @@ class HomeActivity : AppCompatActivity() {
                 R.id.navigation_recommend, R.id.navigation_home, R.id.navigation_notifications
             )
         )
-
-        changeFragment(RecommendFragment())
+        var intentC = intent.getStringExtra("firstActivity") == "1"
+        if(intentC){
+            changeFragment(HomeFragment())
+        }else{
+            changeFragment(RecommendFragment())
+        }
 
         navView.run {
             setOnItemSelectedListener { item ->

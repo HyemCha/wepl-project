@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 class RecommendAdapter(context: Context, youTubeItems: ArrayList<Items>) : RecyclerView.Adapter<RecommendAdapter.ViewHolder>() {
     private var itemList = youTubeItems
     private var cont = context
-//    Log.d(TAG_D, "$cont")
 
     inner class ViewHolder(private val binding: RecommendItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

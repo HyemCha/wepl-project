@@ -44,10 +44,30 @@
                 style="@style/view_custom_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="jpop"/>
+                android:text="#kpop"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/home_rv2"
+                style="@style/view_custom_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/divider2"
+                style="@style/view_custom_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/genre3"
+                style="@style/view_custom_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#christmas"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/home_rv3"
                 style="@style/view_custom_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

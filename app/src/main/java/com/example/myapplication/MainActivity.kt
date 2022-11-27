@@ -34,10 +34,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.rBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, HomeActivity::class.java)
+            intent.putExtra("firstActivity", "2")
+
             startActivity(intent)
         }
         binding.lBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, SongListActivity::class.java)
+            val intent = Intent(this@MainActivity, HomeActivity::class.java)
+            intent.putExtra("firstActivity", "1")
             startActivity(intent)
         }
 

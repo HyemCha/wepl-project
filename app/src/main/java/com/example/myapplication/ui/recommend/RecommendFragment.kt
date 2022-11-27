@@ -27,7 +27,8 @@ import com.example.myapplication.HomeActivity
 import com.example.myapplication.R
 import com.example.myapplication.YoutubeActivity
 import com.example.myapplication.databinding.FragmentRecommendBinding
-import com.example.myapplication.envs.PLAYLIST_ID_1
+import com.example.myapplication.envs.*
+import com.example.myapplication.locationinfo.UserLocation
 import com.example.myapplication.roomdb.db.WeplDatabase
 import com.example.myapplication.roomdb.entity.Region
 import com.example.myapplication.roomdb.entity.Song
@@ -77,7 +78,7 @@ class RecommendFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
+        val recommendViewModel =
             ViewModelProvider(this)[RecommendViewModel::class.java]
         val youTubeViewModel: YouTubeViewModel by lazy {
             ViewModelProvider(this)[YouTubeViewModel::class.java]
@@ -87,36 +88,42 @@ class RecommendFragment : Fragment() {
         val root: View = binding.root
 
         var loc: TextView = binding.location
+        var pId: String = ""
 
         // let's initiate the fused..providerClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(homeActivity)
 
-        getLastLocation(loc)
-        // create a new function that return the city name and the country name
-        // let's this value add to toast
-
-        //위도 경도 범위가 1번에 해당하면 1에 해당한느 플레이리스트 가져오는 코드
-        var myLoc = 1
-        if (myLoc == 1) {
-            youTubeViewModel.refreshPlaylistItems(PLAYLIST_ID_1)
-            youTubeViewModel.youTubePlaylistItemsLiveData.observe(viewLifecycleOwner){response->
-                if (response == null) {
-                    Toast.makeText(homeActivity, "Unsuccessful netsork call!", Toast.LENGTH_SHORT).show()
-                    return@observe
-                }
-                binding.apply {
-                    recommendRecyclerview.layoutManager = LinearLayoutManager(context)
-                    recommendRecyclerview.adapter = RecommendAdapter(homeActivity, response)
-                }
+        getLastLocation(loc, recommendViewModel)
+        recommendViewModel.regionWithin1km.observe(viewLifecycleOwner) {
+            if (it == null) {
+                Toast.makeText(homeActivity, "There is nothing within 1km", Toast.LENGTH_SHORT)
+                    .show()
+                return@observe
             }
-
+            Log.d(TAG_D, "rec-viewmodel$it")
+            binding.location.text = "${it.location} 근처"
         }
 
-//        if (true) {
-//
-//        } else {
-//
-//        }
+        recommendViewModel.pId.observe(viewLifecycleOwner) {
+            pId = it
+            Log.d(TAG_D, "pIdAfterPIdsetting1$pId")
+
+            youTubeViewModel.refreshPlaylistItems(pId)
+        }
+
+        youTubeViewModel.youTubePlaylistItemsLiveData.observe(viewLifecycleOwner) { response ->
+            if (response == null) {
+                Toast.makeText(homeActivity, "Unsuccessful network call!", Toast.LENGTH_SHORT)
+                    .show()
+                return@observe
+            }
+            binding.apply {
+                recommendRecyclerview.layoutManager = LinearLayoutManager(context)
+                recommendRecyclerview.adapter = RecommendAdapter(homeActivity, response)
+            }
+        }
+
+
 
         return root
     }
@@ -126,36 +133,8 @@ class RecommendFragment : Fragment() {
         _binding = null
     }
 
-    private fun playYoutube(videoId:String) {
-        var intent = Intent(homeActivity, YoutubeActivity::class.java)
-        intent.putExtra("videoId", videoId)
-        startActivity(intent)
-    }
-
-    // 반경1km내에 존재하는지 확인하는 함수
-
-
-    // 존재하면 해당하는 지역 정보 가져오기
-    private fun getLocationInTheScope(): Region?{
-        var regionInfo: Region ?= null
-       // db에서 반겨 1km내에 존재하는 관광지 있으면 true(@Query getRegionByLocation()) globalscope으로 db.regiondao실행->해당하는 노래 리스트 가져오기
-        GlobalScope.launch(Dispatchers.IO) {
-
-        }
-        return regionInfo
-    }
-
-    // 지역정보에 해당하는 노래 가져오기
-    private fun getSongListByLocation(loc: Int): List<Song>? {
-        var songList : List<Song>? = null
-        GlobalScope.launch(Dispatchers.IO) {
-
-        }
-        return songList
-    }
-
     //a function that will allow us to get the last Location
-    private fun getLastLocation(loc: TextView) {
+    fun getLastLocation(loc: TextView, recViewModel: RecommendViewModel) {
         // first - check permission
         if (checkPermission()) {
             //Now check the location service is enabled
@@ -164,21 +143,14 @@ class RecommendFragment : Fragment() {
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener { task ->
                     var location: Location? = task.result
                     if (location == null) {
-                        // if the location is null wd will get the new user location
-                        // new function
-                        // don't forget the add new location
                         getNewLocation()
                     } else {
-                        Toast.makeText(
+//                        loc.text = getCountryName(location.latitude, location.longitude)
+                        recViewModel.getTheRegionInTheScope(
                             homeActivity,
-                            "위도 : " + location.latitude + " 경도 : " +
-                                    location.longitude + "\n" + "cytiname : " + getCityName(
-                                location.latitude,
-                                location.longitude
-                            ) + " 나라 : " + getCountryName(location.latitude, location.longitude),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        loc.text = getCountryName(location.latitude, location.longitude)
+                            location.longitude,
+                            location.latitude
+                        )
                     }
                 }
             }
@@ -213,7 +185,7 @@ class RecommendFragment : Fragment() {
                 Toast.makeText(
                     homeActivity,
                     "위도 : " + lastLocation.latitude + " 경도 : " + lastLocation?.longitude +
-                            lastLocation.longitude + "\n" + "cytiname : " + getCityName(
+                            lastLocation.longitude + "\n" + "cityname : " + getCityName(
                         lastLocation.latitude,
                         lastLocation.longitude
                     ) + " 나라 : " + getCountryName(lastLocation.latitude, lastLocation.longitude),
