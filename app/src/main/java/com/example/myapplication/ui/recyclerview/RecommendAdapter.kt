@@ -6,10 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.myapplication.YoutubeActivity
 import com.example.myapplication.databinding.RecommendItemBinding
 import com.example.myapplication.envs.TAG_D
-import com.example.myapplication.maniadbapi.adapter.MyBindingAdapter.setImage
+//import com.example.myapplication.maniadbapi.adapter.MyBindingAdapter.setImage
 import com.example.myapplication.youtubeapi.Items
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,7 +24,7 @@ class RecommendAdapter(context: Context, youTubeItems: ArrayList<Items>) : Recyc
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Items) {
-            item.snippet!!.thumbnails!!.high!!.url?.let { binding.imageView2.setImage(it) }
+            Glide.with(binding.root).load(item.snippet!!.thumbnails!!.high!!.url).centerCrop().into(binding.imageView2)
             binding.songTitle.text = item.snippet!!.title
         }
     }

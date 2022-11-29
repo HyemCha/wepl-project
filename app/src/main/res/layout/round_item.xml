@@ -4,9 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="item"
-            type="com.example.myapplication.maniadbapi.model.Item" />
-        <variable
             name="hvt"
             type="com.example.myapplication.youtubeapi.Snippet" />
     </data>

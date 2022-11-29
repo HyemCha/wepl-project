@@ -24,6 +24,6 @@ interface UserDao {
     @Query("DELETE FROM user")
     suspend fun deleteAll()
 
-    @Query("SELECT email FROM user WHERE(email Like :email) ")
+    @Query("SELECT first_name FROM user WHERE(email Like :email) ")
     suspend fun isAlreadyJoined(email: String): String
 }

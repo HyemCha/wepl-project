@@ -2,30 +2,20 @@ package com.example.myapplication.ui.home
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.HomeActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.envs.HOME_PID_3
-import com.example.myapplication.ui.recyclerview.HomeAdapter
-import com.example.myapplication.ui.recyclerview.RecyclerAdapter
 import com.example.myapplication.ui.recyclerview.YouTubeAdapter
-import com.example.myapplication.youtubeapi.YouTubeRepository
 import com.example.myapplication.youtubeapi.YouTubeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 

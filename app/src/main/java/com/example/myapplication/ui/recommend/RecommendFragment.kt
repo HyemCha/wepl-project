@@ -2,7 +2,6 @@ package com.example.myapplication.ui.recommend
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -10,7 +9,6 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.provider.Settings.Global
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,20 +16,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.HomeActivity
-import com.example.myapplication.R
-import com.example.myapplication.YoutubeActivity
 import com.example.myapplication.databinding.FragmentRecommendBinding
 import com.example.myapplication.envs.*
-import com.example.myapplication.locationinfo.UserLocation
 import com.example.myapplication.roomdb.db.WeplDatabase
-import com.example.myapplication.roomdb.entity.Region
-import com.example.myapplication.roomdb.entity.Song
 import com.example.myapplication.ui.recyclerview.RecommendAdapter
 import com.example.myapplication.youtubeapi.YouTubeViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -40,10 +31,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 class RecommendFragment : Fragment() {
     private lateinit var weplDB: WeplDatabase
@@ -60,17 +50,16 @@ class RecommendFragment : Fragment() {
 
     }
 
-    // create some variables that we need
+    var lng: Double? = null
+    var lat: Double? = null
+
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var locationRequest: LocationRequest
 
-    //the permission id is just an int that must be unique so you can use any number
     val PERMISSION_ID = 99
 
     private var _binding: FragmentRecommendBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -87,13 +76,20 @@ class RecommendFragment : Fragment() {
         _binding = FragmentRecommendBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+
+
         var loc: TextView = binding.location
         var pId: String = ""
 
-        // let's initiate the fused..providerClient
+//        val mapView = MapView(homeActivity)
+//        binding.clKakaoMapView.addView(mapView)
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(homeActivity)
 
         getLastLocation(loc, recommendViewModel)
+
+
+
         recommendViewModel.regionWithin1km.observe(viewLifecycleOwner) {
             if (it == null) {
                 Toast.makeText(homeActivity, "There is nothing within 1km", Toast.LENGTH_SHORT)
@@ -102,6 +98,7 @@ class RecommendFragment : Fragment() {
             }
             Log.d(TAG_D, "rec-viewmodel$it")
             binding.location.text = "${it.location} 근처"
+
         }
 
         recommendViewModel.pId.observe(viewLifecycleOwner) {
@@ -110,6 +107,24 @@ class RecommendFragment : Fragment() {
 
             youTubeViewModel.refreshPlaylistItems(pId)
         }
+
+        recommendViewModel.distance.observe(viewLifecycleOwner){
+            var d = floor(it*1000).roundToInt()
+            binding.distance.text = "내 위치로부터 약 ${d}m 떨어짐"
+        }
+
+
+        recommendViewModel.tags.observe(viewLifecycleOwner){
+            if (it == null) {
+                return@observe
+            }
+            binding.tag1.text = it[0]
+            binding.tag2.text = it[1]
+            binding.tag3.text = it[2]
+            binding.tag4.text = it[3]
+            binding.tag5.text = it[4]
+        }
+
 
         youTubeViewModel.youTubePlaylistItemsLiveData.observe(viewLifecycleOwner) { response ->
             if (response == null) {
@@ -151,12 +166,14 @@ class RecommendFragment : Fragment() {
                             location.longitude,
                             location.latitude
                         )
+                        lng = location.longitude
+                        lat = location.latitude
                     }
                 }
             }
         } else {
-            Toast.makeText(homeActivity, "Please Enable your Location service", Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(homeActivity, "Please Enable your Location service", Toast.LENGTH_SHORT)
+//                .show()
             requestPermission()
         }
     }
@@ -268,4 +285,14 @@ class RecommendFragment : Fragment() {
             }
         }
     }
+
+    fun initLonLat(lon: Double, lat: Double) {
+
+    }
+
+//    override fun onMapReady(p0: GoogleMap) {
+//        googleMap = p0
+//        googleMap!!.mapType = GoogleMap.MAP_TYPE_NORMAL
+//        Log.d(TAG_D, "lnglat onMapReady$lng")
+//    }
 }

@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import com.example.myapplication.envs.*
 import com.example.myapplication.roomdb.db.WeplDatabase
 import com.example.myapplication.roomdb.entity.Region
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.Marker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,6 +32,12 @@ class RecommendViewModel : ViewModel() {
     private val _pId = MutableLiveData<String>()
     val pId: LiveData<String> = _pId
 
+    private val _tags = MutableLiveData<List<String>>()
+    val tags: LiveData<List<String>> = _tags
+
+    private val _distance = MutableLiveData<Double>()
+    val distance: LiveData<Double> = _distance
+
 
     fun getTheRegionInTheScope(context: Context, userLon: Double?, userLat: Double?) {
         var resultRegion: Region? = null
@@ -45,10 +53,15 @@ class RecommendViewModel : ViewModel() {
                 var d = calcDistance(i, userLon!!, userLat!!)
                 Log.d(TAG_D, "distance-$d")
                 if(d!! <= DISTANCE){
+                    _distance.postValue(d)
                     Log.d(TAG_D,"userLoc-return$i")
                     _regionWithin1km.postValue(i)
                     Log.d(TAG_D,"recViewModel-${regionWithin1km}")
                     getPId(i.id!!)
+
+                    var ks: List<String>
+                    ks = i.keywords!!.split(", ")
+                    _tags.postValue(ks)
                 }
                 k++
             }

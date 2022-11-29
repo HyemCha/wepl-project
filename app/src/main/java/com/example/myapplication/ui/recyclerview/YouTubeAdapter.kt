@@ -5,12 +5,11 @@ import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.compose.ui.layout.Layout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.myapplication.YoutubeActivity
 import com.example.myapplication.databinding.RoundItemBinding
 import com.example.myapplication.envs.TAG_D
-import com.example.myapplication.maniadbapi.adapter.MyBindingAdapter.setImage
 import com.example.myapplication.youtubeapi.Items
 
 class YouTubeAdapter(context: Context, youTubeItems: ArrayList<Items>) : RecyclerView.Adapter<YouTubeAdapter.ViewHolder>() {
@@ -20,8 +19,8 @@ class YouTubeAdapter(context: Context, youTubeItems: ArrayList<Items>) : Recycle
     inner class ViewHolder(private val binding: RoundItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Items) {
+            Glide.with(binding.root).load(item.snippet!!.thumbnails!!.high!!.url).centerCrop().into(binding.imageView)
             binding.imageView.clipToOutline = true
-            item.snippet!!.thumbnails!!.high!!.url!!.let { binding.imageView.setImage(it) }
             binding.songTitle.text = item.snippet!!.title
         }
     }

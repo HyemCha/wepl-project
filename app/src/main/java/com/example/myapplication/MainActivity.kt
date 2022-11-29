@@ -1,23 +1,15 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityMainBinding
-import com.example.myapplication.envs.TAG_D
-import com.example.myapplication.maniadbapi.SongListActivity
 import com.example.myapplication.roomdb.db.WeplDatabase
-import com.example.myapplication.roomdb.entity.Region
-import com.example.myapplication.roomdb.entity.RegionKeywords
-import com.example.myapplication.youtubeapi.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import java.security.MessageDigest
 
 // 1km = 0.008993255058705971도
 class MainActivity : AppCompatActivity() {
@@ -44,6 +36,22 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        
+    }
+    fun getAppKeyHash() {
+        try {
+            val info =
+                packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures) {
+                var md: MessageDigest
+                md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val something = String(Base64.encode(md.digest(), 0))
+                Log.e("Hash key", something)
+            }
+        } catch (e: Exception) {
 
+            Log.e("name not found", e.toString())
+        }
     }
 }
