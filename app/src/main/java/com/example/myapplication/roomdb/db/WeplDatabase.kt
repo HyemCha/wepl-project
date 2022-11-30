@@ -6,16 +6,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.myapplication.roomdb.dao.RegionDao
 import com.example.myapplication.roomdb.dao.RegionKeywordsDao
+import com.example.myapplication.roomdb.dao.SongDao
 import com.example.myapplication.roomdb.dao.UserDao
 import com.example.myapplication.roomdb.entity.Region
 import com.example.myapplication.roomdb.entity.RegionKeywords
+import com.example.myapplication.roomdb.entity.Song
 import com.example.myapplication.roomdb.entity.User
 
-@Database(entities = [User::class, Region::class, RegionKeywords::class], version = 1)
+@Database(entities = [User::class, Region::class, RegionKeywords::class, Song::class], version = 1)
 abstract class WeplDatabase: RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun regionDao(): RegionDao
     abstract fun regionKeywordsDao(): RegionKeywordsDao
+    abstract fun songDao(): SongDao
 
     companion object {
 

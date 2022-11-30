@@ -6,6 +6,7 @@
     <string name="title_recommend">Recommend</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="round_square_radius">50dp</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

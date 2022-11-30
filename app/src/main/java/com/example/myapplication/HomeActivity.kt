@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Window
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -22,6 +23,7 @@ class HomeActivity : AppCompatActivity() {
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         val navView: BottomNavigationView = binding.navView
 

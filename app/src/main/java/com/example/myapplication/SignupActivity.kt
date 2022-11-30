@@ -1,52 +1,77 @@
 package com.example.myapplication
 
 import android.app.appsearch.GlobalSearchSession
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.ActivityHomeBinding
 import com.example.myapplication.databinding.ActivitySignupBinding
 import com.example.myapplication.envs.TAG_D
 import com.example.myapplication.roomdb.db.WeplDatabase
 import com.example.myapplication.roomdb.entity.User
+import com.example.myapplication.ui.notifications.NotificationsFragment
 import com.example.myapplication.viewmodel.SignupViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SignupActivity : AppCompatActivity() {
+class SignupActivity : Fragment() {
 
+    // 1. Context를 할당할 변수를 프로퍼티로 선언(어디서든 사용할 수 있게)
+    lateinit var homeActivity: HomeActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        // 2. Context를 액티비티로 형변환해서 할당
+        homeActivity = context as HomeActivity
+
+    }
+
+//    private lateinit var binding : ActivitySignupBinding
     private lateinit var binding : ActivitySignupBinding
     private lateinit var weplDB : WeplDatabase
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View {
         val signupViewModel = ViewModelProvider(this)[SignupViewModel::class.java]
 
-        binding = ActivitySignupBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+//        binding = ActivitySignupBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
+        binding = ActivitySignupBinding.inflate(inflater, container, false)
 
-        weplDB = WeplDatabase.getDatabase(this)
+        weplDB = WeplDatabase.getDatabase(homeActivity)
 
         binding.button1.setOnClickListener{
             if(isAlreadyJoined()) {
-                Toast.makeText(this, "이미 가입하셨네요!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(homeActivity, "이미 가입하셨네요!", Toast.LENGTH_SHORT).show()
             }
             else if (checkPwd()) {
                 writeData()
             }else {
-                Toast.makeText(this, "비밀번호가 일지하지 않습니다👾", Toast.LENGTH_SHORT).show()
+                Toast.makeText(homeActivity, "비밀번호가 일지하지 않습니다👾", Toast.LENGTH_SHORT).show()
             }
         }
 
-//        binding.button2.setOnClickListener{
-//            readData()
-//        }
+        binding.before.setOnClickListener{
+            homeActivity.supportFragmentManager.beginTransaction().replace(this.id, NotificationsFragment()).commitAllowingStateLoss()
+        }
+
+        return binding.root
     }
     private fun writeData() {
         val firstName = binding.firstName.text.toString()
@@ -66,7 +91,7 @@ class SignupActivity : AppCompatActivity() {
             binding.pwd.text.clear()
             binding.pwdCheck.text.clear()
 
-            Toast.makeText(this@SignupActivity, "welcome $firstName 🎉", Toast.LENGTH_SHORT).show()
+            Toast.makeText(homeActivity, "welcome $firstName 🎉", Toast.LENGTH_SHORT).show()
         }
     }
 

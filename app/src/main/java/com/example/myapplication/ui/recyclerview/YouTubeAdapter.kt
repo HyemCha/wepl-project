@@ -40,5 +40,5 @@ class YouTubeAdapter(context: Context, youTubeItems: ArrayList<Items>) : Recycle
         }
     }
 
-    override fun getItemCount() = itemList!!.size
+    override fun getItemCount() = itemList.size
 }

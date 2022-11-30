@@ -8,8 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.example.myapplication.envs.*
 import com.example.myapplication.roomdb.db.WeplDatabase
 import com.example.myapplication.roomdb.entity.Region
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.Marker
+import com.example.myapplication.roomdb.entity.Song
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,12 +31,25 @@ class RecommendViewModel : ViewModel() {
     private val _pId = MutableLiveData<String>()
     val pId: LiveData<String> = _pId
 
+    private val _regionId = MutableLiveData<Int>()
+    val regionId: LiveData<Int> = _regionId
+
     private val _tags = MutableLiveData<List<String>>()
     val tags: LiveData<List<String>> = _tags
 
     private val _distance = MutableLiveData<Double>()
     val distance: LiveData<Double> = _distance
 
+    fun getSong(context: Context, regionId:Int) {
+//        weplDB = WeplDatabase.getDatabase(context)
+
+        var songList: List<Song>? = null
+
+//        GlobalScope.launch(Dispatchers.IO) {
+//            songList = weplDB.songDao().getSongs(regionId)
+//        }
+
+    }
 
     fun getTheRegionInTheScope(context: Context, userLon: Double?, userLat: Double?) {
         var resultRegion: Region? = null
@@ -57,6 +69,7 @@ class RecommendViewModel : ViewModel() {
                     Log.d(TAG_D,"userLoc-return$i")
                     _regionWithin1km.postValue(i)
                     Log.d(TAG_D,"recViewModel-${regionWithin1km}")
+                    _regionId.postValue(i.id!!)
                     getPId(i.id!!)
 
                     var ks: List<String>
@@ -65,6 +78,12 @@ class RecommendViewModel : ViewModel() {
                 }
                 k++
             }
+        }
+    }
+
+    fun getSongKeywords(regionId: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+
         }
     }
 

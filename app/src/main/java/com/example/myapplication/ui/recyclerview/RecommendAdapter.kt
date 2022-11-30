@@ -10,6 +10,8 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.YoutubeActivity
 import com.example.myapplication.databinding.RecommendItemBinding
 import com.example.myapplication.envs.TAG_D
+import com.example.myapplication.roomdb.db.WeplDatabase
+import com.example.myapplication.roomdb.entity.Song
 //import com.example.myapplication.maniadbapi.adapter.MyBindingAdapter.setImage
 import com.example.myapplication.youtubeapi.Items
 import kotlinx.coroutines.Dispatchers
@@ -19,13 +21,19 @@ import kotlinx.coroutines.launch
 class RecommendAdapter(context: Context, youTubeItems: ArrayList<Items>) : RecyclerView.Adapter<RecommendAdapter.ViewHolder>() {
     private var itemList = youTubeItems
     private var cont = context
+    private var weplDB = WeplDatabase.getDatabase(cont)
+
 
     inner class ViewHolder(private val binding: RecommendItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Items) {
             Glide.with(binding.root).load(item.snippet!!.thumbnails!!.high!!.url).centerCrop().into(binding.imageView2)
+            binding.imageView2.clipToOutline = true
             binding.songTitle.text = item.snippet!!.title
+        }
+        fun keysBind(keys: List<String>){
+
         }
     }
 
@@ -37,7 +45,8 @@ class RecommendAdapter(context: Context, youTubeItems: ArrayList<Items>) : Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             // db 안의 노래 키워드 가져오기
-
+            val keyList: Song = weplDB.songDao().getSongs(itemList[position].snippet!!.resourceId!!.videoId)
+            Log.d(TAG_D, "keyList$keyList")
         }
         holder.bind(itemList[position])
         holder.itemView.setOnClickListener{
@@ -48,5 +57,5 @@ class RecommendAdapter(context: Context, youTubeItems: ArrayList<Items>) : Recyc
         }
     }
 
-    override fun getItemCount() = itemList!!.size
+    override fun getItemCount() = itemList.size
 }

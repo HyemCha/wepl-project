@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.HomeActivity
+import com.example.myapplication.LoginActivity
+import com.example.myapplication.R
 import com.example.myapplication.SignupActivity
 import com.example.myapplication.databinding.FragmentNotificationsBinding
 
@@ -45,13 +47,18 @@ class NotificationsFragment : Fragment() {
         val root: View = binding.root
 
         binding.signup.setOnClickListener{
-            var intent = Intent(homeActivity, SignupActivity::class.java)
-            startActivity(intent)
+//            var intent = Intent(homeActivity, SignupActivity::class.java)
+//            startActivity(intent)
+            (context as HomeActivity).supportFragmentManager.beginTransaction().replace(this.id, SignupActivity()).commitAllowingStateLoss()
+        }
+
+        binding.signin.setOnClickListener{
+//            var intent = Intent(homeActivity, SignupActivity::class.java)
+//            startActivity(intent)
+            (context as HomeActivity).supportFragmentManager.beginTransaction().replace(this.id, LoginActivity()).commitAllowingStateLoss()
         }
 
         return root
-
-
     }
 
     override fun onDestroyView() {
